@@ -45,7 +45,7 @@ if(REPLY_REGEX) {
 	    var flags = REPLY_REGEX.replace(/.*\/([gimy]*)$/, '$1');
 	    var pattern = REPLY_REGEX.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
 	    var regex = new RegExp(pattern, flags);
-	    //console.log("Parsed RegEx:", regex);
+	    console.log("Parsed RegEx:", regex);
 	} catch(e) {
 	    isValid = false;
 	}
@@ -75,14 +75,15 @@ const bot = new LemmyBot({
   },
   federation: {
     allowList: [
+      //you seem to need two instances or it will listen on everything.
       {
-        instance: 'REPLY_INSTANCE',
-        communities: ['REPLY_COMMUNITY']
+        instance: REPLY_INSTANCE,
+        communities: [REPLY_COMMUNITY]
+      },
+      {
+        instance: 'lemmy.douwes.co.uk',
+      	communities: ['test']
       }
-      //{
-      //  instance: 'lemmy.douwes.co.uk',
-      //	communities: ['test']
-      //}
     ]
   },
   dbFile: 'db.sqlite3',
@@ -96,7 +97,7 @@ const bot = new LemmyBot({
       const bot_id = await getUserId(USERNAME_OR_EMAIL);
       //console.log("Bot ID:", bot_id);
       //console.log("Comment creator ID:", comment.creator_id);
-      //console.log("Comment body:", comment.content);
+      console.log("Comment body:", comment.content);
       //console.log("RegEx:", regex);
         //sometimes getUserId returns undefined, don't reply to the comment incase it is the bots comment
       	if (comment.creator_id != bot_id && bot_id !== undefined) {
@@ -109,16 +110,36 @@ const bot = new LemmyBot({
 	  });
           preventReprocess();
 	  }
-	  //else
-          //{
-	  //  console.log("comment didn't match RegEx, not responding")
-          //}
+	  else
+          {
+	    console.log("comment didn't match RegEx, not responding")
+          }
 	}
 	else
 	{
 	  console.log("ignoring self comment");
 	  //preventReprocess();
 	}
+    },
+    async post ({
+       postView: { post },
+       botActions: { createComment, getUserId },
+       preventReprocess
+    }) {
+	  console.log("Post Title:", post.name);
+	  if (regex.test(post.body!) || regex.test(post.name)) {
+	    console.log("post matched RegEx, responding")	  
+              createComment({
+               postId: post.id,
+	       //parentId: comment.id,
+               content: REPLY_TEXT,
+	      });
+            preventReprocess();
+	  }
+	  else
+          {
+	    console.log("post didn't match RegEx, not responding")
+          }
     }
   }
 });
