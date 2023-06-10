@@ -78,7 +78,7 @@ const bot = new LemmyBot({
       {
         instance: 'REPLY_INSTANCE',
         communities: ['REPLY_COMMUNITY']
-      },
+      }
       //{
       //  instance: 'lemmy.douwes.co.uk',
       //	communities: ['test']
