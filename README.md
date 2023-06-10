@@ -2,7 +2,7 @@
 
 A lemmy bot to reply with some text to comments that match RegEx
 
-This is the code used for [@PetrosianBot@lemmy.douwes.co.uk](@PetrosianBot@lemmy.douwes.co.uk)
+This is the code used for [@PetrosianBot@lemmy.douwes.co.uk](https://lemmy.douwes.co.uk/u/PetrosianBot)
 
 This project uses the [lemmy-bot](https://github.com/SleeplessOne1917/lemmy-bot) library  
 
